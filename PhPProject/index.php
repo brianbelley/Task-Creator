@@ -51,6 +51,9 @@ if (isset($_POST['register'])) {
     <title>Login/Register</title>
 </head>
 <body>
+<?php include('header.php'); ?>
+
+
     <h1>Login</h1>
     <?php if (isset($error)) { ?>
         <p><?php echo $error ?></p>
@@ -81,5 +84,7 @@ if (isset($_POST['register'])) {
         <br>
         <input type="submit" name="register" value="Register">
     </form>
+    
+    <?php include('footer.php'); ?>
 </body>
 </html>

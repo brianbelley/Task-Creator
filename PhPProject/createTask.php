@@ -12,7 +12,7 @@ if (!isset($_SESSION['userId'])) {
 if (isset($_POST['submit'])) {
     $userId = $_SESSION['userId'];
     $description = $_POST['description'];
-    $date = date('Y-m-d H:i:s');
+    $date = $_POST['date'];
     $user = UserDAL::getUserById($userId);
     $task = new Task($user, $description, $date);
     TaskDAL::addTask($task);
@@ -31,10 +31,12 @@ if (isset($_POST['submit'])) {
         <label>Description:</label>
         <input type="text" name="description" required>
         <br>
+        <label>Date:</label>
+        <input type="date" name="date" required>
+        <br>
         <input type="submit" name="submit" value="Create">
     </form>
     <br>
     <a href="dashboard.php">Back to Dashboard</a>
 </body>
 </html>
-

@@ -3,9 +3,9 @@ require_once 'User.php';
 
 class Task extends User {
     protected static $counter1 = 0;
-    private $taskId;
-    private $description;
-    private $date;
+    protected int $taskId;
+    protected string $description;
+    protected string $date;
     
     public function __construct($userId,$description, $date) {
         $this->userId = parent::$counter;

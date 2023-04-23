@@ -23,16 +23,26 @@ class TaskDAL {
     
     public static function getTaskByTaskId($taskId) {
         $conn = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-        if (!$conn) {
-            die("Connection failed: " . mysqli_connect_error());
+        $query = "SELECT task.taskId, user.userId, user.firstName, user.lastName, task.description, task.date FROM task INNER JOIN user ON task.userId = user.userId WHERE task.taskId = $taskId";
+        $result = mysqli_query($conn, $query);
+        
+        if (!$result) {
+            return null;
         }
         
-        $stmt = "SELECT * FROM task WHERE taskId = " . mysqli_real_escape_string($conn, $taskId);
-        $result = mysqli_query($conn, $stmt);
         $row = mysqli_fetch_assoc($result);
+        
+        $user = new User($row['userId'], $row['firstName'], $row['lastName']);
+        $task = new Task($user, $row['description'], $row['date']);
+        $task->setTaskId($row['taskId']);
+        
+        mysqli_free_result($result);
         mysqli_close($conn);
-        return $row;
+        
+        return $task;
     }
+    
+     
 
     public static function addTask($task) {
         $conn = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
@@ -40,7 +50,7 @@ class TaskDAL {
             die("Connection failed: " . mysqli_connect_error());
         }
         
-        $stmt = "INSERT INTO task (userId, description, date) VALUES ('" . mysqli_real_escape_string($conn, $task->getUserId()) . "', '" . mysqli_real_escape_string($conn, $task->getDescription()) . "', '" . mysqli_real_escape_string($conn, $task->getDate()) . "')";
+        $stmt = "INSERT INTO task (taskId, userId, description, date) VALUES ('" . mysqli_real_escape_string($conn, $task->getTaskId()). "', '" . mysqli_real_escape_string($conn, $task->getUserId()) . "', '" . mysqli_real_escape_string($conn, $task->getDescription()) . "', '" . mysqli_real_escape_string($conn, $task->getDate()) . "')";
         $result = mysqli_query($conn, $stmt);
         mysqli_close($conn);
         return $result;

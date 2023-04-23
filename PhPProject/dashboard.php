@@ -3,6 +3,8 @@ require_once('dbConfig.php');
 require_once('Task.php');
 require_once('TaskDAL.php');
 
+
+
 // start session
 session_start();
 
@@ -24,6 +26,7 @@ $tasks = TaskDAL::getTasksByUserId($_SESSION['userId']);
   <title>Dashboard</title>
 </head>
 <body>
+<?php include('header.php'); ?>
   <h1>Dashboard</h1>
 
   <?php if (count($tasks) > 0): ?>
@@ -67,6 +70,6 @@ $tasks = TaskDAL::getTasksByUserId($_SESSION['userId']);
   <form action="logout.php" method="POST">
     <input type="submit" value="Logout">
   </form>
-
+<?php include('footer.php'); ?>
 </body>
 </html>
