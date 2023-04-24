@@ -22,9 +22,7 @@ class TaskDAL {
         mysqli_close($conn);
         return $tasks;
     }
-    
-    
-    
+
     public static function getTaskByTaskId($taskId) {
         $conn = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
         $query = "SELECT task.taskId, user.userId, user.firstName, user.lastName, task.description, task.date FROM task INNER JOIN user ON task.userId = user.userId WHERE task.taskId = $taskId";
