@@ -27,19 +27,32 @@ if (isset($_POST['submit'])) {
 <html>
 <head>
     <title>Create Task</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
-    <h1>Create Task</h1>
-    <form method="POST">
-        <label>Description:</label>
-        <input type="text" name="description" required>
-        <br>
-        <label>Date:</label>
-        <input type="date" name="date" required>
-        <br>
-        <input type="submit" name="submit" value="Create">
-    </form>
-    <br>
-    <a href="dashboard.php">Back to Dashboard</a>
+<div class="max-w-2xl mx-auto my-12 shadow-xl">
+    <div class="text-center font-bold text-4xl mb-0 bg-gray-700 rounded-tl-xl rounded-tr-xl text-white py-6">
+        <p>Schedule<span class="text-indigo-400 font-mono">IT</span></p>
+    </div>
+    <div class="bg-gray-200 p-12">
+        <h1 class="font-black text-2xl border-b-4 border-indigo-600 mb-7 text-indigo-600">Create Task</h1>
+        <form method="POST" class="space-y-6 mb-8">
+            <div class="flex flex-col space-y-2">
+                <label class="text-md font-medium">Description:</label>
+                <textarea name="description" required class="p-4 rounded-xl"></textarea>
+            </div>
+            <div class="flex flex-col space-y-2">
+                <label class="text-md font-medium">Date:</label>
+                <input type="date" name="date" required class="p-4 rounded-xl">
+            </div>
+            <div class="flex justify-between">
+                <input type="submit" name="submit" value="Create" class="bg-indigo-600 text-white px-3 py-2 rounded-sm hover:bg-indigo-800 cursor-pointer">
+                <a href="dashboard.php" class="bg-indigo-300 px-3 py-2 rounded-sm hover:bg-indigo-400">
+                    Back to Dashboard
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
 </body>
 </html>
