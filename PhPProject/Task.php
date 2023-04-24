@@ -8,7 +8,7 @@ class Task extends User {
     protected string $date;
     
     public function __construct($userId,$description, $date) {
-        $this->userId = parent::$counter;
+        $this->userId = $userId;
         $this->description = $description;
         $this->date = $date;
         self::$counter1++; // increment the counter for each new object

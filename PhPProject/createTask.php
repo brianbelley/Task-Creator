@@ -9,17 +9,20 @@ if (!isset($_SESSION['userId'])) {
     exit;
 }
 
+$userId = $_SESSION['userId'];
+$user = UserDAL::getUserById($userId);
+$firstName = $user->getFirstName();
+
 if (isset($_POST['submit'])) {
-    $userId = $_SESSION['userId'];
     $description = $_POST['description'];
     $date = $_POST['date'];
-    $user = UserDAL::getUserById($userId);
-    $task = new Task($user, $description, $date);
+    $task = new Task($userId, $description, $date);
     TaskDAL::addTask($task);
     header('Location: dashboard.php');
     exit;
 }
 ?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -27,6 +30,7 @@ if (isset($_POST['submit'])) {
 </head>
 <body>
     <h1>Create Task</h1>
+    <p>Welcome, <?php echo $firstName ?> with the id: <?php  echo $userId; ?>!</p>
     <form method="POST">
         <label>Description:</label>
         <input type="text" name="description" required>

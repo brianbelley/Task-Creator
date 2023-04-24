@@ -71,11 +71,15 @@ class UserDAL {
         mysqli_stmt_bind_param($stmt, "sssss",$userid, $username,$firstname,$lastname, $password);
         $result = mysqli_stmt_execute($stmt);
         
+        // Create a new User object with the same userId as in the database
+        $newUser = new User($userid, $username, $firstname, $lastname, $password);
+        
         mysqli_stmt_close($stmt);
         mysqli_close($conn);
         
-        return $result;
+        return $newUser;
     }
+    
     
     private static function incrementUserId() {
         $conn = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
