@@ -1,7 +1,5 @@
 <?php
-require_once 'Task.php';
 require_once 'TaskDAL.php';
-require_once 'UserDAL.php';
 session_start();
 
 if (!isset($_SESSION['userId'])) {
@@ -9,47 +7,43 @@ if (!isset($_SESSION['userId'])) {
     exit;
 }
 
-if (isset($_POST['submit'])) {
+if (isset($_POST['taskId']) && isset($_POST['description']) && isset($_POST['date'])) {
     $taskId = $_POST['taskId'];
     $description = $_POST['description'];
     $date = $_POST['date'];
-    
-    $task = TaskDAL::getTaskByTaskId($taskId);
-    $task->setDescription($description);
-    $task->setDate($date);
-    
-    TaskDAL::updateTask($task);
-    
+    $user = new User($_SESSION['userId'], $_SESSION['firstName'], $_SESSION['lastName'], $_SESSION['password']);
+    TaskDAL::updateTask($taskId, $description, $date, $user);
     header('Location: dashboard.php');
     exit;
 }
 
-if (isset($_GET['taskId'])) {
-    $taskId = $_GET['taskId'];
-    $task = TaskDAL::getTaskByTaskId($taskId);
-} else {
-    header('Location: dashboard.php');
-    exit;
-}
+$taskId = $_GET['id'];
+$task = TaskDAL::getTaskByTaskId($taskId);
+
 ?>
 <!DOCTYPE html>
 <html>
 <head>
     <title>Update Task</title>
 </head>
+<?php include('header.php'); ?>
 <body>
     <h1>Update Task</h1>
     <form method="POST">
-        <input type="hidden" name="taskId" value="<?php echo $task->getTaskId(); ?>">
-        <label>Description:</label>
-        <input type="text" name="description" value="<?php echo $task->getDescription(); ?>" required>
-        <br>
-        <label>Date:</label>
-        <input type="date" name="date" value="<?php echo $task->getDate(); ?>" required>
-        <br>
-        <input type="submit" name="submit" value="Update">
+        <input type="hidden" name="taskId" value="<?php echo $taskId; ?>">
+        <div>
+            <label for="description">Description:</label>
+            <input type="text" name="description" value="<?php echo $task->getDescription(); ?>">
+        </div>
+        <div>
+            <label for="date">Date:</label>
+            <input type="date" name="date" value="<?php echo $task->getDate(); ?>">
+        </div>
+        <button type="submit" name="updateTask">Update Task</button>
     </form>
-    <br>
-    <a href="dashboard.php">Back to Dashboard</a>
+    <div>
+        <a href="dashboard.php"><button>Back to Dashboard</button></a>
+    </div>
 </body>
-</html>
+<?php include('footer.php'); ?>
+</html> 

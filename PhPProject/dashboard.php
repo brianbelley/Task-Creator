@@ -1,75 +1,56 @@
 <?php
-require_once('dbConfig.php');
-require_once('Task.php');
-require_once('TaskDAL.php');
-
-
-
-// start session
+require_once 'TaskDAL.php';
+require_once 'UserDAL.php';
 session_start();
 
-// check if user is logged in
 if (!isset($_SESSION['userId'])) {
-  // redirect to login page
-  header('Location: index.php');
-  exit();
+    header('Location: index.php');
+    exit;
 }
 
-// get user's tasks
 $tasks = TaskDAL::getTasksByUserId($_SESSION['userId']);
+$user = UserDAL::readUser($_SESSION['userId']);
 
 ?>
 
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Dashboard</title>
+    <title>Dashboard</title>
 </head>
-<body>
 <?php include('header.php'); ?>
-  <h1>Dashboard</h1>
-
-  <?php if (count($tasks) > 0): ?>
-    <table>
-      <thead>
-        <tr>
-          <th>Task ID</th>
-          <th>Description</th>
-          <th>Date</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <?php foreach ($tasks as $task): ?>
-          <tr>
-            <td><?php echo $task->getTaskId(); ?></td>
-            <td><?php echo $task->getDescription(); ?></td>
-            <td><?php echo $task->getDate(); ?></td>
-            <td>
-              <form action="updateTask.php" method="POST">
-                <input type="hidden" name="taskId" value="<?php echo $task->getTaskId(); ?>">
-                <input type="submit" value="Update">
-              </form>
-              <form action="deleteTask.php" method="POST">
-                <input type="hidden" name="taskId" value="<?php echo $task->getTaskId(); ?>">
-                <input type="submit" value="Delete">
-              </form>
-            </td>
-          </tr>
-        <?php endforeach; ?>
-      </tbody>
-    </table>
-  <?php else: ?>
-    <p>You created no task yet</p>
-  <?php endif; ?>
-
-  <form action="createTask.php" method="POST">
-    <input type="submit" value="Create Task">
-  </form>
-
-  <form action="logout.php" method="POST">
-    <input type="submit" value="Logout">
-  </form>
-<?php include('footer.php'); ?>
+<body>
+    <h1>Welcome, <?php echo $user->getFirstname(); ?>!</h1>
+    <h2>Dashboard</h2>
+    <?php if (!empty($tasks)) { ?>
+        <table>
+            <thead>
+                <tr>
+                    <th>Description</th>
+                    <th>Date</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($tasks as $task) { ?>
+    			<tr>
+       				 <td><?php echo $task['description']; ?></td>
+        			 <td><?php echo $task['date']; ?></td>
+        			 <td>
+            			<a href="updateTask.php?id=<?php echo $task['taskId']; ?>"><button>Update</button></a>
+           				<a href="deleteTask.php?id=<?php echo $task['taskId']; ?>"><button>Delete</button></a>
+       				 </td>
+    			</tr>
+			<?php } ?>
+            </tbody>
+        </table>
+    <?php } else { ?>
+        <p>There is no task available.</p>
+    <?php } ?>
+    <div>
+        <a href="createTask.php"><button>Create Task</button></a>
+        <a href="logout.php"><button>Logout</button></a>
+    </div>
 </body>
+<?php include('footer.php'); ?>
 </html>

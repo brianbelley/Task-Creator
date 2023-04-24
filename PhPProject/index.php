@@ -19,7 +19,7 @@ if (isset($_POST['login'])) {
     $user = UserDAL::getUserByUsernameAndPassword($username, $password);
     
     if ($user) {
-        $_SESSION['userId'] = $user->getUserId();
+        $_SESSION['userId'] = $user['userId'];
         header('Location: dashboard.php');
         exit;
     } else {
@@ -38,9 +38,8 @@ if (isset($_POST['register'])) {
     $user = new User($username, $firstName, $lastName, $password);
     UserDAL::addUser($user);
     
-    // Automatically log in the new user
-    $_SESSION['userId'] = $user->getUserId();
-    header('Location: dashboard.php');
+    // Reload the index
+    header('Location: index.php');
     exit;
 }
 ?>
@@ -59,12 +58,10 @@ if (isset($_POST['register'])) {
         <p><?php echo $error ?></p>
     <?php } ?>
     <form method="post">
-        <label for="username">Username:</label>
-        <input type="text" name="username" required>
-        <br>
-        <label for="password">Password:</label>
-        <input type="password" name="password" required>
-        <br>
+        <label>Username:</label>
+        <input type="text" name="username"><br>
+        <label>Password:</label>
+        <input type="password" name="password"><br>
         <input type="submit" name="login" value="Login">
     </form>
     

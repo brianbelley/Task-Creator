@@ -10,6 +10,5 @@
     </header>
     
     <main>
-      <p>Welcome !</p>
     </main>
 

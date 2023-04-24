@@ -7,7 +7,7 @@ class UserDAL {
         $db = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
         
         // Prepare the SQL statement
-        $stmt = mysqli_prepare($db,"SELECT userId FROM user WHERE userName = ? AND password = ?");
+        $stmt = mysqli_prepare($db, "SELECT userId, firstName, lastName FROM user WHERE userName = ? AND password = ?");
         
         // Bind the parameters
         $stmt->bind_param("ss", $username, $password);
@@ -15,8 +15,8 @@ class UserDAL {
         // Execute the query
         $stmt->execute();
         
-        // Bind the result to a variable
-        $stmt->bind_result($userId);
+        // Bind the result to variables
+        $stmt->bind_result($userId, $firstName, $lastName);
         
         // Fetch the result
         $stmt->fetch();
@@ -25,9 +25,14 @@ class UserDAL {
         $stmt->close();
         $db->close();
         
-        // If a user was found, return a new User object with the user id
+        // If a user was found, return an associative array with user details
         if ($userId) {
-            return new User($userId,$username,$firstname,$lastname,$password);
+            return array(
+                "userId" => $userId,
+                "username" => $username,
+                "firstName" => $firstName,
+                "lastName" => $lastName
+            );
         } else {
             return false;
         }
@@ -35,9 +40,28 @@ class UserDAL {
     
     
     
+    public static function readUser($userId) {
+        $conn = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+        if (!$conn) {
+            die("Connection failed: " . mysqli_connect_error());
+        }
+        
+        $stmt = "SELECT * FROM user WHERE userId = " . mysqli_real_escape_string($conn, $userId);
+        $result = mysqli_query($conn, $stmt);
+        $user = null;
+        if (mysqli_num_rows($result) == 1) {
+            $row = mysqli_fetch_assoc($result);
+            $user = new User($row['userId'], $row['firstName'], $row['lastName'], $row['password']);
+        }
+        mysqli_close($conn);
+        return $user;
+    }
+    
+    
+    
     public static function addUser($user) {
         $conn = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-        $userid = $user->getUserId();
+        $userid = self::incrementUserId(); // get the next user ID
         $username = $user->getUsername();
         $firstname = $user->getFirstName();
         $lastname = $user->getLastName();
@@ -52,6 +76,19 @@ class UserDAL {
         
         return $result;
     }
+    
+    private static function incrementUserId() {
+        $conn = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+        $stmt = mysqli_prepare($conn, "SELECT MAX(userId) FROM user");
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_bind_result($stmt, $maxUserId);
+        mysqli_stmt_fetch($stmt);
+        mysqli_stmt_close($stmt);
+        mysqli_close($conn);
+        
+        return ++$maxUserId; // increment the maximum user ID by 1 and return it
+    }
+    
     
     public static function getUserByUsername($username) {
         $conn = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
