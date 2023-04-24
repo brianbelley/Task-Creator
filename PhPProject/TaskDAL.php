@@ -5,7 +5,7 @@ require_once('Task.php');
 class TaskDAL {
     public static function getTasksByUserId($userId) {
         $conn = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-        $stmt = mysqli_prepare($conn, "SELECT * FROM task WHERE userId = ?");
+        $stmt = mysqli_prepare($conn, "SELECT * FROM task WHERE userId = ? ORDER BY date DESC");
         mysqli_stmt_bind_param($stmt, "i", $userId);
         mysqli_stmt_execute($stmt);
         $result = mysqli_stmt_get_result($stmt);
