@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 23, 2023 at 07:54 AM
+-- Generation Time: Apr 24, 2023 at 03:27 AM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -34,13 +34,6 @@ CREATE TABLE `task` (
   `date` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `task`
---
-
-INSERT INTO `task` (`taskId`, `userId`, `description`, `date`) VALUES
-(0, 1, 'testing', '2023-04-23');
-
 -- --------------------------------------------------------
 
 --
@@ -56,13 +49,6 @@ CREATE TABLE `user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `user`
---
-
-INSERT INTO `user` (`userId`, `userName`, `firstName`, `lastName`, `password`) VALUES
-(1, 'test', 'Brian', 'Belley', 'og36mobrian');
-
---
 -- Indexes for dumped tables
 --
 
@@ -71,7 +57,6 @@ INSERT INTO `user` (`userId`, `userName`, `firstName`, `lastName`, `password`) V
 --
 ALTER TABLE `task`
   ADD PRIMARY KEY (`taskId`,`userId`),
-  ADD UNIQUE KEY `userId_2` (`userId`),
   ADD KEY `userId` (`userId`);
 
 --
