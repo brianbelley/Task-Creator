@@ -30,7 +30,6 @@ if (isset($_POST['submit'])) {
 </head>
 <body>
     <h1>Create Task</h1>
-    <p>Welcome, <?php echo $firstName ?> with the id: <?php  echo $userId; ?>!</p>
     <form method="POST">
         <label>Description:</label>
         <input type="text" name="description" required>
